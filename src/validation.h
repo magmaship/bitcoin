@@ -498,6 +498,9 @@ bool DisconnectBlock(const CBlock& block, CValidationState& state, const CBlockI
 /** Check a block is completely valid from start to finish (only works on top of our current best block, with cs_main held) */
 bool TestBlockValidity(CValidationState& state, const CChainParams& chainparams, const CBlock& block, CBlockIndex* pindexPrev, bool fCheckPOW = true, bool fCheckMerkleRoot = true);
 
+/** Check whether witness commitments are going required within 2016 blocks. */
+bool IsWitnessLockedIn(const CBlockIndex* pindexPrev, const Consensus::Params& params);
+
 /** Check whether witness commitments are required for block. */
 bool IsWitnessEnabled(const CBlockIndex* pindexPrev, const Consensus::Params& params);
 
