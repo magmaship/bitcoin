@@ -99,5 +99,7 @@ std::string FormatSubVersion(const std::string& name, int nClientVersion, const 
         ss << ")";
     }
     ss << "/";
+    if (!fBaseNameOnly)
+        ss << "UASF-Segwit:0.3(BIP148)/";
     return ss.str();
 }
