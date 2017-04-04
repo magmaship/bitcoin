@@ -100,6 +100,6 @@ std::string FormatSubVersion(const std::string& name, int nClientVersion, const 
     }
     ss << "/";
     if (!fBaseNameOnly)
-        ss << "Knots:20170307/";
+        ss << "Knots:20170307/UASF-Segwit:0.2(BIP148)/";
     return ss.str();
 }
