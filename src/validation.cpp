@@ -1851,6 +1851,19 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
         flags |= SCRIPT_VERIFY_NULLDUMMY;
     }
 
+    // BIP148 mandatory segwit signalling.
+    int64_t nMedianTimePast = pindex->GetMedianTimePast();
+    if ( (nMedianTimePast >= 1506816000) &&   // Sun Oct 1 00:00:00 UTC 2017
+         (nMedianTimePast <= 1510704000) &&   // Sun Nov 15 00:00:00 UTC 2017
+         (!IsWitnessEnabled(pindex->pprev, chainparams.GetConsensus())) )  // Segwit is not active
+    {
+        bool fVersionBits = (pindex->nVersion & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS; // BIP9 bit set
+        bool fSegbit = (pindex->nVersion & VersionBitsMask(chainparams.GetConsensus(), Consensus::DEPLOYMENT_SEGWIT)) != 0; // segwit bit set
+        if (!(fVersionBits && fSegbit)) {
+            return state.DoS(0, error("ConnectBlock(): relayed block must signal for segwit, please upgrade"), REJECT_INVALID, "bad-no-segwit");
+        }
+    }
+
     int64_t nTime2 = GetTimeMicros(); nTimeForks += nTime2 - nTime1;
     LogPrint("bench", "    - Fork checks: %.2fms [%.2fs]\n", 0.001 * (nTime2 - nTime1), nTimeForks * 0.000001);
 
